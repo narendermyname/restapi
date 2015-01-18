@@ -33,7 +33,7 @@ public class TaskRepositoryImpl implements TaskRepository {
 	@Override
 	public List<Task> list() {
 		LOG.debug("Starts TaskRepositoryImpl.list()");
-		if(taskList==null){
+		if(taskList.isEmpty()){
 			FileInputStream fout;
 			ObjectInputStream oos;
 			LOG.info("FIle where we store tasks : "+TASK_FILE);
@@ -47,7 +47,7 @@ public class TaskRepositoryImpl implements TaskRepository {
 			} 
 		}
 		LOG.debug("Ends TaskRepositoryImpl.list()");
-		return null;
+		return taskList;
 	}
 
 	@Override
@@ -58,11 +58,11 @@ public class TaskRepositoryImpl implements TaskRepository {
 			if((task.getName()!=null && task.getName().equals(t.getName())) ||
 					(task.getStatus()!=null && task.getStatus().equals(t.getStatus())) ||
 					(task.getPriority()!=null && task.getPriority().equals(t.getPriority()))){
-				responseList.add(task);
+				responseList.add(t);
 			}
 		}
 		LOG.debug("Ends TaskRepositoryImpl.search()");
-		return null;
+		return responseList;
 	}
 
 	@Override
@@ -89,20 +89,20 @@ public class TaskRepositoryImpl implements TaskRepository {
 			temp=new Task();
 		}
 		LOG.debug("Ends TaskRepositoryImpl.update()");		
-		return null;
+		return temp;
 	}
 
 	@Override
 	public void delete(Task task) {
 		LOG.debug("Starts TaskRepositoryImpl.delete() task :"+task);
-		Task temp=null;
+		List<Task> temp=new ArrayList<Task>();
 		for(Task t:taskList){
 			if(t.getName().equals(task.getName())){
-				temp=task;
+				temp.add(t);
 			}
 		}
-		if(temp!=null){
-			taskList.remove(temp);
+		for(Task t:temp){
+			taskList.remove(t);
 		}
 		LOG.debug("Ends TaskRepositoryImpl.delete()");		
 	}
@@ -113,6 +113,7 @@ public class TaskRepositoryImpl implements TaskRepository {
 		LOG.debug("Starts TaskRepositoryImpl.saveTaskToDisk()taskList :  "+taskList);
 		FileOutputStream fout;
 		ObjectOutputStream oos;
+		String response="SUCCESS";
 		LOG.info("FIle where we store tasks : "+TASK_FILE);
 		try {
 			fout = new FileOutputStream(TASK_FILE);
@@ -120,10 +121,11 @@ public class TaskRepositoryImpl implements TaskRepository {
 			oos.writeObject(taskList);
 		} catch (IOException e) {
 			LOG.error("Error while saving tasks to disk : ", e);
+			response="ERROR";
 			throw new TaskException("ERROR while save data to disk");
 		} 
 		LOG.debug("Ends TaskRepositoryImpl.saveTaskToDisk()");
-		return null;
+		return response;
 	}
 
 

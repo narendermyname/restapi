@@ -6,7 +6,6 @@ package com.interview.task.spring.context;
 import org.springframework.beans.BeansException;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
-import org.springframework.stereotype.Component;
 
 import com.interview.task.service.TaskService;
 
@@ -18,7 +17,7 @@ public class TaskAppContext implements ApplicationContextAware{
 
 	private ApplicationContext applicationContext;
 	private static TaskAppContext instance=null;
-	private static final String TASK_SERVICE="service";
+	private static final String TASK_SERVICE="taskService";
 	/**
 	 * 
 	 */
@@ -47,6 +46,6 @@ public class TaskAppContext implements ApplicationContextAware{
 	@Override
 	public void setApplicationContext(ApplicationContext applicationContext)
 			throws BeansException {
-		this.applicationContext =applicationContext;//== null?new ClassPathXmlApplicationContext("applicationContext.xml"):applicationContext;
+		this.applicationContext =applicationContext;
 	}
 }
